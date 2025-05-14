@@ -3,10 +3,21 @@ package Iterator;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Main {
     public static void main(String[] args) throws IOException {
+        List<User> userList = new ArrayList<>();
+
+        readUsers(user -> {
+            userList.add(user);
+            System.out.println(user);
+        });
+    }
+
+    private static void readUsers(Consumer<User> userConsumer) throws IOException {
         List<String> lines = Files.readAllLines(new File("src/main/java/Iterator/data.user").toPath());
         for (String line : lines) {
             String midString = line.substring(1, line.length() - 1);
@@ -14,7 +25,7 @@ public class Main {
             String name = split[0];
             int age = Integer.parseInt(split[1]);
             User user = new User(name, age);
-            System.out.println(user);
+            userConsumer.accept(user);
         }
     }
 }
